@@ -38,4 +38,44 @@ Ans:- select a.snum,a.sname, b.cname, b.city  from salespeople a, customer b whe
 12. Find the largest order taken by each salesperson.
 Ans:- select a.snum,a.sname, max(c.amt) from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum group by a.snum, a.sname;
 
+13. Find customers in San Jose who have a rating above 200.
+Ans:- select * from customer where rating>200 and city='San Jose';
+
+14. List the names and commissions of all salespeople in London.
+Ans:- select sname, comm from salespeople where city='London';
+
+15. List all the orders of salesperson Motika from the Orders table.
+Ans:- select a.snum, a.sname, c.onum from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum and a.sname='Motika';
+
+16. Find all customers with orders on October 3.
+Ans:- select a.cnum, a.cname,b.onum, b.odate from customer a, orders b where a.cnum=b.cnum and odate='1996-10-03';
+
+17. Give the sums of the amounts from the Orders table, grouped by date, eliminating all those
+dates where the SUM was not at least 2000.00 above the MAX amount.
+Ans:- SELECT odate, SUM(amt) FROM orders a GROUP BY odate HAVING SUM(amt) > (SELECT 2000.00 + MAX(amt)  FROM orders b WHERE a.odate = b.odate);
+
+18. Select all orders that had amounts that were greater than at least one of the orders from October 6.
+Ans:- Select * from orders where odate != '1996-10-06' and amt > ( select min(amt) from orders where odate = '1996-10-06');
+
+19. Write a query that uses the EXISTS operator to extract all salespeople who have customers with a rating of 300.
+Ans:- select a.snum,a.sname from salespeople a where exists (select cname from customer  where snum=a.snum and rating=300);
+
+20. Find all pairs of customers having the same rating.
+Ans:- select a.cname, b.cname, b.rating from customer a, customer b where a.rating=b.rating and a.cnum!=b.cnum;
+
+21. Find all customers whose CNUM is 1000 above the SNUM of Serres.
+Ans:-  select cnum, cname from customer where cnum>(select snum+1000 from salespeople where sname='Serres');
+
+22. Give the salespeople’s commissions as percentages instead of decimal numbers.
+Ans:- select comm*100 from salespeople;
+
+23. Find the largest order taken by each salesperson on each date, eliminating those MAX orders which are less than $3000.00 in value.
+Ans:-  select a.snum, c.odate, max(c.amt) from salespeople a, customer b,orders c where a.snum=b.snum and b.cnum=c.cnum and c.amt > 3000 group by a.snum,c.odate order by a.snum,c.odate;
+
+24. List the largest orders for October 3, for each salesperson.
+Ans:- select a.snum, a.sname,c.odate, max(c.amt) from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum and odate='1996-10-03' group by a.snum,c.odate;
+
+25. Find all customers located in cities where Serres (SNUM 1002) has customers.
+Ans:- select a.snum, a.sname, b.city from salespeople a, customer b where a.snum=b.snum and a.snum=1002
+
 
