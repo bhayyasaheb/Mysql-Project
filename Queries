@@ -1,0 +1,41 @@
+1. List all the columns of the Salespeople table.
+Ans:- describe salespeople;
+
+2. List all customers with a rating of 100.
+Ans:- select * from customer where rating=100;
+
+3. Find all records in the Customer table with NULL values in the city column.
+Ans:- select * from customer where city = null;
+
+4. Find the largest order taken by each salesperson on each date.
+Ans:- 
+First:-
+select a.snum, a.sname,c.odate, c.amt from salespeople a, customer b, orders c where a.snum = b.snum and b.cnum=c.cnum;
+Second:- 
+select a.snum, a.sname, c.odate, max(c.amt) from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum group by a.snum, a.sname, c.odate;
+
+5. Arrange the Orders table by descending customer number.
+Ans:- select * from orders order by cnum  desc;
+
+6. Find which salespeople currently have orders in the Orders table.
+Ans:- select a.snum, a.sname,c.onum  FROM salespeople a, customer b, orders c where a.snum = b.snum and b.cnum = c.cnum;
+
+7. List names of all customers matched with the salespeople serving them.
+Ans:-select a.snum,a.sname, b.cname FROM salespeople a, customer b where a.snum=b.snum;
+
+8. Find the names and numbers of all salespeople who had more than one customer.
+Ans:- select a.snum, a.sname from salespeople a where 1<(select count(*) from customer b where a.snum=b.snum);
+
+9. Count the orders of each of the salespeople and output the results in descending order.
+Ans:- select a.snum, b.cnum, count(c.onum) from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum group by a.snum,b.cnum order by a.snum desc;
+
+10. List the Customer table if and only if one or more of the customers in the Customer table are located in San Jose.
+Ans:- select * from customer where city = 'San Jose';
+
+11. Match salespeople to customers according to what city they lived in.
+Ans:- select a.snum,a.sname, b.cname, b.city  from salespeople a, customer b where a.city= b.city;
+
+12. Find the largest order taken by each salesperson.
+Ans:- select a.snum,a.sname, max(c.amt) from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum group by a.snum, a.sname;
+
+
