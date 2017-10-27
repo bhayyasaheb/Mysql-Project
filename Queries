@@ -79,3 +79,58 @@ Ans:- select a.snum, a.sname,c.odate, max(c.amt) from salespeople a, customer b,
 Ans:- select a.snum, a.sname, b.city from salespeople a, customer b where a.snum=b.snum and a.snum=1002
 
 
+26. Select all customers with a rating above 200.00.
+Ans:- select * from customer where rating>200;
+
+27. Count the number of salespeople currently listing orders in the Orders table.
+Ans:- 
+Count the number orders of each salespeople:- select a.snum, a.sname, count(c.onum) from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum group by a.snum, a.sname;
+Count the number of salespeople listing in orders:- select count(distinct a.snum) from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum;
+
+28. Write a query that produces all customers serviced by salespeople with a commission above 12%. Output the customer’s name and the salesperson’s rate of commission.
+Ans:- select b.cname, a.sname, a.comm*100 from customer b, salespeople a where a.snum=b.snum and a.comm*100 > 12;
+
+29. Find salespeople who have multiple customers.
+Ans:- select snum from customer group by snum having count(*) > 1;
+
+30. Find salespeople with customers located in their city.
+Ans:- select a.sname from salespeople a where a.snum in (select b.snum from customer b  where a.city = b.city and a.snum=b.snum);
+
+31. Find all salespeople whose name starts with ‘P’ and the fourth character is ‘l’.
+Ans:- select * from salespeople where sname LIKE 'P__l'; jm
+
+32. Write a query that uses a subquery to obtain all orders for the customer named Cisneros.
+Assume you do not know his customer number.
+Ans:- select onum,odate from orders where cnum= (select cnum from customer where cname='Cisneros');
+
+33. Find the largest orders for Serres and Rifkin.
+Ans:-  select a.snum,a.sname,max(c.amt) from salespeople a, customer b,orders  c where a.snum=b.snum and b.cnum=c.cnum group by a.snum,a.sname having a.sname ='Serres' or a.sname='Rifkin' ;
+
+34. Extract the Salespeople table in the following order : SNUM, SNAME, COMMISSION, CITY.
+Ans:- select snum, sname, comm, city from salespeople;
+
+35. Select all customers whose names fall in between ‘A’ and ‘G’ alphabetical range.
+Ans:- select * from customer where cname BETWEEN 'A' and 'G' ORDER BY cname;
+
+36. Select all the possible combinations of customers that you can assign.
+Ans:- select a.snum, a.sname,b.cnum, b.cname, c.onum from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum;
+
+37. Select all orders that are greater than the average for October 4.
+Ans:- select * from orders where amt > (select avg(amt) from orders where odate='1996-10-04');
+
+38. Write a select command using a corelated subquery that selects the names and numbers of all
+customers with ratings equal to the maximum for their city.
+Ans:- select a.cnum,a.cname from customer a where a.rating=(select max(b.rating) from customer b where a.city=b.city);
+
+39. Write a query that totals the orders for each day and places the results in descending order.
+Ans:-mysql> select odate, count(onum) from orders group by odate order by count(onum) desc;
+
+40. Write a select command that produces the rating followed by the name of each customer in San Jose.
+Ans:- select cname, rating, city from customer where city= 'San Jose';
+
+
+
+
+
+
+
