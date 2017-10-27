@@ -160,7 +160,39 @@ Ans:- select snum,cname from customer where snum in (select snum from customer g
 50. Write a query that will give you all orders for more than $1000.00
 Ans:- select * from orders where amt>1000.00;
 
+51. Write a query that lists each order number followed by the name of the customer who made that order.
+Ans:- select onum, cname from customer JOIN orders using(cnum);
 
+52. Write 2 queries that select all salespeople (by name and number) who have customers in their cities who they do not service, 
+one using a join and one a corelated subquery. Which solution is more elegant?
+Ans:- 
+Using JOIN:- select distinct cname from customer a, salespeople b where a.city = b.city and a.snum != b.snum;
 
+Using Subquery:- select cname from customer where cname in (select cname from customer a, salespeople b where a.city=b.city and a.snum != b.snum);
 
+53. Write a query that selects all customers whose ratings are equal to or greater than ANY (in the SQL sense) of Serres’?
+Ans:- select * from customer where rating >= ANY (select rating from customer where snum = (select snum from salespeople where sname = 'Serres'));
+
+54. Write 2 queries that will produce all orders taken on October 3 or October 4.
+Ans:- select * from orders where odate='1996-10-03' OR odate='1996-10-04';
+				OR
+      select * from orders where odate in ('1996-10-03','1996-10-04');
+ 
+55. Write a query that produces all pairs of orders by a given customer. Name that customer and eliminate duplicates.
+Ans:- select c.cname, a.onum, b.onum from orders a, orders b, customer c where a.cnum = b.cnum and c.cnum = a.cnum and a.onum > b.onum;
+
+56. Find only those customers whose ratings are higher than every customer in Rome.
+Ans:- select * from customer where rating > (select max(rating) from customer where city='Rome');
+
+57. Write a query on the Customers table whose output will exclude all customers with a rating <=100.00, unless they are located in Rome.
+Ans:- select * from customer where rating <=100 OR city = 'Rome';
+
+58. Find all rows from the Customers table for which the salesperson number is 1001.
+Ans:- select * from customer where snum=1001;
+
+59. Find the total amount in Orders for each salesperson for whom this total is greater than the amount of the largest order in the table.
+Ans:- select a.snum,a.sname, sum(c.amt) from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum group by snum,sname having sum(c.amt) > (select max(amt) from orders);
+
+60. Write a query that selects all orders save those with zeroes or NULLs in the amount field.
+Ans:- select * from orders where amt != null OR amt !=0;
 
