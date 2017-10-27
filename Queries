@@ -128,7 +128,37 @@ Ans:-mysql> select odate, count(onum) from orders group by odate order by count(
 40. Write a select command that produces the rating followed by the name of each customer in San Jose.
 Ans:- select cname, rating, city from customer where city= 'San Jose';
 
+41. Find all orders with amounts smaller than any amount for a customer in San Jose.
+Ans:- select * from orders where amt < any (select amt from orders, customer where customer.city='San Jose' and orders.cnum=customer.cnum);
 
+42. Find all orders with above average amounts for their customers.
+Ans:- select * from orders a where amt > (select avg(amt) from orders b where b.cnum=a.cnum );
+
+43. Write a query that selects the highest rating in each city.
+Ans:- select city max(rating) from customer group by city;
+
+44. Write a query that calculates the amount of the salesperson’s commission on each order by a customer with a rating above 100.00.
+Ans:- select sname, amt * comm   FROM salespeople JOIN customer using(snum) JOIN orders using(cnum) WHERE rating>100;
+						OR
+Select sname, amt * comm from orders, customer, salespeople where rating > 100 and salespeople.snum = customer.snum and customer.cnum = orders.cnum;
+
+45. Count the customers with ratings above San Jose’s average.
+Ans:- select cname, rating from customer where rating > (select avg(rating) from customer where city='San Jose');
+
+46. Write a query that produces all pairs of salespeople with themselves as well as duplicate rows with the order reversed.
+Ans:-  select *  from salespeople a, salespeople b where a.snum > b.snum;
+
+47. Find all salespeople that are located in either Barcelona or London.
+Ans:- select * from salespeople where city='Barcelona' OR city = 'London';
+
+48. Find all salespeople with only one customer.
+Ans:- select snum, count(*) 'customerCount' from customer group by snum having customerCount = 1;
+
+49. Write a query that joins the Customer table to itself to find all pairs of customers served by a single salesperson.
+Ans:- select snum,cname from customer where snum in (select snum from customer group by snum having count(snum) > 1);
+ 
+50. Write a query that will give you all orders for more than $1000.00
+Ans:- select * from orders where amt>1000.00;
 
 
 
