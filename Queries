@@ -146,7 +146,9 @@ Select sname, amt * comm from orders, customer, salespeople where rating > 100 a
 Ans:- select cname, rating from customer where rating > (select avg(rating) from customer where city='San Jose');
 
 46. Write a query that produces all pairs of salespeople with themselves as well as duplicate rows with the order reversed.
-Ans:-  select *  from salespeople a, salespeople b where a.snum > b.snum;
+Ans:-  (select * from salespeople) union all (select * from salespeople) order by sname desc;
+						OR
+	( check  it is correct or not select *  from salespeople a, salespeople b where a.snum > b.snum;)
 
 47. Find all salespeople that are located in either Barcelona or London.
 Ans:- select * from salespeople where city='Barcelona' OR city = 'London';
@@ -476,4 +478,38 @@ Ans:- select a.snum,a.sname, sum(c.amt) from salespeople a, customer b, orders c
 
 110.Who is the worst customer with respect to the company?
 Ans:- select a.cnum,a.cname, sum(b.amt) from customer a, orders b where a.cnum=b.cnum group by a.cnum order by sum(b.amt) asc limit 1;
+
+111.Are all customers not having placed orders greater than 200 totally been serviced by salespersons Peel or Serres?
+Ans:- select a.snum,a.sname, b.cnum, b.cname, c.amt, c.onum from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum and c.amt < 200;
+
+112.Which customers have the same rating?
+Ans:- select a.cname,b.cname from customer a, customer b where a.cnum != b.cnum and a.rating=b.rating;
+
+113.Find all orders greater than the average for October 4th.
+Ans:- select * from orders where amt > (select avg(amt) from orders where odate='1996-10-04');
+
+114.Which customers have above average orders?
+Ans:- select distinct(b.cnum), a.cname,b.amt from customer a, orders b where a.cnum=b.cnum and b.amt > (select avg(amt) from orders);
+
+115.List all customers with ratings above San Jose’s average.
+Ans:- select * from customer where rating > (select avg(rating) from customer where city='San Jose');
+
+116.Select the total amount in orders for each salesperson for whom the total is greater than the amount of the largest order in the table.
+Ans:- select a.sname, b.snum, sum(c.amt) 'Sum' from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum group by b.snum having Sum > (select max(amt) from orders);
+
+117.Give names and numbers of all salespersons who have more than one customer.
+Ans:- select a.sname,b.snum, count(*) from salespeople a, customer b where a.snum= b.snum group by snum having count(*) >1;
+
+118.Select all salespersons by name and number who have customers in their city whom they don’t service.
+Ans:- select distinct(a.snum), a.sname from salespeople a, customer b where a.snum != b.snum and a.city=b.city;
+
+119.Which customers’ rating should be lowered?
+Ans:- select a.cname,a.rating,sum(b.amt) 'totalorder' from customer a, orders b where a.cnum=b.cnum group by a.cname,a.rating order by totalorder desc;
+
+120.Is there a case for assigning a salesperson to Berlin?
+Ans:- 
+
+
+
+
 
