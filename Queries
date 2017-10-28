@@ -266,3 +266,99 @@ Ans:- select cnum,cname from customer where cname like 'C%';
 the highest rating is : (rating).
 Ans:- select city, max(rating) from customer group by city;
 
+81. Write a query that will produce the SNUM values of all salespeople with orders currently in the Orders table (without any repeats).
+Ans:- select distinct(a.snum) from customer a, orders b where a.cnum=b.cnum;
+
+82. Write a query that lists customers in descending order of rating. Output the rating field first, followed by 
+the customer’s names and numbers.
+Ans:- select rating, cname, cnum from customer order by rating desc;
+
+83. Find the average commission for salespeople in London.
+Ans:- select avg(comm) from salespeople where city='London';
+
+84. Find all orders credited to the same salesperson who services Hoffman (CNUM 2001).
+Ans:- select b.onum,b.odate,b.amt,b.cnum from customer a, orders b where a.cnum=b.cnum and a.snum = (select snum from customer c where c.cnum=2001); 
+
+85. Find all salespeople whose commission is in between 0.10 and 0.12 (both inclusive).
+Ans:- select * from salespeople where comm >= 0.10 and comm =< 0.12; 
+				OR
+	select * from salespeople where comm between 0.10 and 0.12;
+
+86. Write a query that will give you the names and cities of all salespeople in London with a commission above 0.10.
+Ans:- select sname, city from salespeople where city='London' and comm > 0.10;
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+87. What will be the output from the following query?
+SELECT * FROM ORDERS
+where (amt < 1000 OR NOT (odate = 10/03/1996 AND cnum >
+2003));
+Ans:- select * from orders where (amt < 1000 OR NOT (odate = '1996-10-03' AND cnum > 2003));
+
+mysql> select * from orders;
++------+---------+------------+------+
+| onum | amt     | odate      | cnum |
++------+---------+------------+------+
+| 3001 |   18.69 | 1996-10-03 | 2008 |
+| 3002 | 1900.10 | 1996-10-03 | 2007 |
+| 3003 |  767.19 | 1996-10-03 | 2001 |
+| 3005 | 5160.45 | 1996-10-03 | 2003 |
+| 3006 | 1098.16 | 1996-10-03 | 2008 |
+| 3007 |   75.75 | 1996-10-04 | 2002 |
+| 3008 | 4723.00 | 1996-10-05 | 2006 |
+| 3009 | 1713.23 | 1996-10-04 | 2002 |
+| 3010 | 1309.95 | 1996-10-06 | 2004 |
+| 3011 | 9891.88 | 1996-10-06 | 2006 |
++------+---------+------------+------+
+10 rows in set (0.00 sec)
+
+mysql> select * from orders where  (odate = '1996-10-03' AND cnum > 2003);  
++------+---------+------------+------+
+| onum | amt     | odate      | cnum |
++------+---------+------------+------+
+| 3001 |   18.69 | 1996-10-03 | 2008 |
+| 3002 | 1900.10 | 1996-10-03 | 2007 |
+| 3006 | 1098.16 | 1996-10-03 | 2008 |
++------+---------+------------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from orders where  NOT (odate = '1996-10-03' AND cnum > 2003);  
++------+---------+------------+------+
+| onum | amt     | odate      | cnum |
++------+---------+------------+------+
+| 3003 |  767.19 | 1996-10-03 | 2001 |
+| 3005 | 5160.45 | 1996-10-03 | 2003 |
+| 3007 |   75.75 | 1996-10-04 | 2002 |
+| 3008 | 4723.00 | 1996-10-05 | 2006 |
+| 3009 | 1713.23 | 1996-10-04 | 2002 |
+| 3010 | 1309.95 | 1996-10-06 | 2004 |
+| 3011 | 9891.88 | 1996-10-06 | 2006 |
++------+---------+------------+------+
+7 rows in set (0.00 sec)
+
+mysql> select * from orders where (amt < 1000 OR NOT (odate = '1996-10-03' AND cnum > 2003));
++------+---------+------------+------+
+| onum | amt     | odate      | cnum |
++------+---------+------------+------+
+| 3001 |   18.69 | 1996-10-03 | 2008 |
+| 3003 |  767.19 | 1996-10-03 | 2001 |
+| 3005 | 5160.45 | 1996-10-03 | 2003 |
+| 3007 |   75.75 | 1996-10-04 | 2002 |
+| 3008 | 4723.00 | 1996-10-05 | 2006 |
+| 3009 | 1713.23 | 1996-10-04 | 2002 |
+| 3010 | 1309.95 | 1996-10-06 | 2004 |
+| 3011 | 9891.88 | 1996-10-06 | 2006 |
++------+---------+------------+------+
+8 rows in set (0.00 sec)
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+88. Write a query that selects each customer’s smallest order.
+Ans:- select a.cnum, a.cname, min(b.amt) from customer a, orders b where a.cnum=b.cnum group by cnum,cname;
+
+89. Write a query that selects the first customer in alphabetical order whose name begins with G.
+Ans:- select min(cname) from customer where cname LIKE 'G%';
+
+90. Write a query that counts the number of different nonNULL city values in the Customers table.
+Ans:- select count(distinct(city)) from customer where city is not Null;
+			OR
+	select count(distinct city) from customer;
+
