@@ -362,3 +362,83 @@ Ans:- select count(distinct(city)) from customer where city is not Null;
 			OR
 	select count(distinct city) from customer;
 
+91. Find the average amount from the Orders table.
+Ans:- select avg(amt) from orders;
+
+92. What would be the output from the following query?
+SELECT * FROM ORDERS
+WHERE NOT (odate = 10/03/96 OR snum > 1006) AND amt >=
+1500);
+Ans:-
+
+mysql> select * from orders where odate='1996-10-03' OR snum > 1006 and amt >= 1500;
+ERROR 1054 (42S22): Unknown column 'snum' in 'where clause'
+
+mysql> select * from orders where odate='1996-10-03' OR cnum > 2006 and amt >= 1500;
++------+---------+------------+------+
+| onum | amt     | odate      | cnum |
++------+---------+------------+------+
+| 3001 |   18.69 | 1996-10-03 | 2008 |
+| 3002 | 1900.10 | 1996-10-03 | 2007 |
+| 3003 |  767.19 | 1996-10-03 | 2001 |
+| 3005 | 5160.45 | 1996-10-03 | 2003 |
+| 3006 | 1098.16 | 1996-10-03 | 2008 |
++------+---------+------------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from orders where not (odate='1996-10-03' OR cnum > 2006 and amt >= 1500);
++------+---------+------------+------+
+| onum | amt     | odate      | cnum |
++------+---------+------------+------+
+| 3007 |   75.75 | 1996-10-04 | 2002 |
+| 3008 | 4723.00 | 1996-10-05 | 2006 |
+| 3009 | 1713.23 | 1996-10-04 | 2002 |
+| 3010 | 1309.95 | 1996-10-06 | 2004 |
+| 3011 | 9891.88 | 1996-10-06 | 2006 |
++------+---------+------------+------+
+5 rows in set (0.00 sec)
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+93. Find all customers who are not located in San Jose and whose rating is above 200.
+Ans:- select cname, city from customer where city != 'San Jose' and rating > 200;
+
+94. Give a simpler way to write this query :
+SELECT snum, sname, city, comm FROM salespeople
+WHERE (comm > + 0.12 OR comm < 0.14);
+Ans:- select * from salespeople;
+
+95. Evaluate the following query :
+SELECT * FROM orders
+WHERE NOT ((odate = 10/03/96 AND snum > 1002) OR amt > 2000.00);
+Ans:- 
+mysql> select * from orders where not ((odate='1996-10-03' and snum>1002) or amt > 2000.00);
+ERROR 1054 (42S22): Unknown column 'snum' in 'where clause'
+
+select * from orders where not ((odate='1996-10-03' and cnum>2002) or amt > 2000.00); 
++------+---------+------------+------+
+| onum | amt     | odate      | cnum |
++------+---------+------------+------+
+| 3003 |  767.19 | 1996-10-03 | 2001 |
+| 3007 |   75.75 | 1996-10-04 | 2002 |
+| 3009 | 1713.23 | 1996-10-04 | 2002 |
+| 3010 | 1309.95 | 1996-10-06 | 2004 |
++------+---------+------------+------+
+4 rows in set (0.00 sec)
+------------------------------------------------------------------------------------------------------------------------------------------
+
+96. Which salespersons attend to customers not in the city they have been assigned to?
+Ans:- select a.sname, a.city,b.city from salespeople a, customer b where a.snum=b.snum and a.city != b.city;
+
+97. Which salespeople get commission greater than 0.11 are serving customers rated less than 250?
+Ans:- select distinct(a.sname) from salespeople a, customer b where a.comm > 0.11 and b.rating < 250;
+
+98. Which salespeople have been assigned to the same city but get different commission percentages?
+Ans:- select a.sname, b.sname from salespeople a, salespeople b where a.city=b.city and a.comm != b.comm;
+
+99. Which salesperson has earned the most by way of commission?
+Ans:- select a.snum,a.sname, sum(c.amt*a.comm) 'commission' from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum group by snum order by commission desc limit 1;
+
+100.Does the customer who has placed the maximum number of orders have the maximum rating?
+Ans:-  
+select a.cnum,a.cname, count(*) 'totalcount' from customer a, orders b where a.cnum=b.cnum and a.rating = (select max(rating) from customer) group by cnum having count(*) = (select count(*) from orders a, customer b where a.cnum=b.cnum group by a.cnum order by count(*) desc limit 1);
+
