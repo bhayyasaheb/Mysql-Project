@@ -442,3 +442,38 @@ Ans:- select a.snum,a.sname, sum(c.amt*a.comm) 'commission' from salespeople a, 
 Ans:-  
 select a.cnum,a.cname, count(*) 'totalcount' from customer a, orders b where a.cnum=b.cnum and a.rating = (select max(rating) from customer) group by cnum having count(*) = (select count(*) from orders a, customer b where a.cnum=b.cnum group by a.cnum order by count(*) desc limit 1);
 
+101.Has the customer who has spent the largest amount of money been given the highest rating?
+Ans:-  
+
+
+
+102.List all customers in descending order of customer rating.
+Ans:- select * from customer order by rating desc;
+
+103.On which days has Hoffman placed orders?
+Ans:- select a.cnum,a.cname,b.odate from customer a, orders b where a.cnum=b.cnum and cname='Hoffman';
+
+104.Do all salespeople have different commissions?
+Ans:- select snum,sname, comm from salespeople;
+
+105.Which salespeople have no orders between 10/03/1996 and 10/05/1996?
+Ans:-select a.snum, a.sname from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum and b.snum not in 
+(select distinct(c.snum) from customer c, orders d where c.cnum=d.cnum and d.odate between '1996-10-03' and '1996-10-05');
+
+106.How many salespersons have succeeded in getting orders?
+Ans:- select count(distinct(a.snum)) from customer a, orders b where a.cnum=b.cnum;
+
+107.How many customers have placed orders?
+Ans:- select count(distinct(b.cnum)) from customer a, orders b where a.cnum=b.cnum;
+			OR
+	select count(distinct(cnum)) from orders;
+
+108.On which date has each salesperson booked an order of maximum value?
+Ans:- select a.sname, c.odate, c.amt from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum and c.amt = (select max(d.amt) from orders d, customer e where d.cnum=e.cnum and e.snum=a.snum);
+
+109.Who is the most successful salesperson?
+Ans:- select a.snum,a.sname, sum(c.amt) from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum group by snum order by sum(c.amt) desc limit 1;
+
+110.Who is the worst customer with respect to the company?
+Ans:- select a.cnum,a.cname, sum(b.amt) from customer a, orders b where a.cnum=b.cnum group by a.cnum order by sum(b.amt) asc limit 1;
+
