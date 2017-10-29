@@ -445,9 +445,10 @@ Ans:-
 select a.cnum,a.cname, count(*) 'totalcount' from customer a, orders b where a.cnum=b.cnum and a.rating = (select max(rating) from customer) group by cnum having count(*) = (select count(*) from orders a, customer b where a.cnum=b.cnum group by a.cnum order by count(*) desc limit 1);
 
 101.Has the customer who has spent the largest amount of money been given the highest rating?
-Ans:-  
+Ans:-  {First find largest amount paid by customer :- select a.cnum,sum(a.amt) from orders a, customer b where a.cnum=b.cnum group by a.cnum;
+	then find highest rating:- select max(rating) from customer; and then compare first with second by using rating which is given below}
 
-
+Ans:- select a.cnum,b.rating,sum(a.amt) from orders a, customer b where a.cnum=b.cnum and rating = (select max(rating) from customer)group by a.cnum;
 
 102.List all customers in descending order of customer rating.
 Ans:- select * from customer order by rating desc;
@@ -507,9 +508,36 @@ Ans:- select distinct(a.snum), a.sname from salespeople a, customer b where a.sn
 Ans:- select a.cname,a.rating,sum(b.amt) 'totalorder' from customer a, orders b where a.cnum=b.cnum group by a.cname,a.rating order by totalorder desc;
 
 120.Is there a case for assigning a salesperson to Berlin?
+Ans:- select 'Yes' as 'Output' from dual where not exists (select * from customer a, salespeople b where a.snum=b.snum and a.city='Berlin')
+	Union
+      select 'No' as 'Output' from dual where exists (select * from customer a, salespeople b where a.snum=b.snum and a.city='Berlin');		
+
+
+121.Is there any evidence linking the performance of a salesperson to the commission that he or she is being paid?
+Ans:- select b.snum, sum(c.amt), a.comm from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum group by b.snum;
+
+122.Does the total amount in orders by customer in Rome and London exceed the commission paid to salespersons in 
+London and New York by more than 5 times?
 Ans:- 
+first calculate:- select sum(a.amt) from orders a, customer b where a.cnum=b.cnum and b.city in ('London','Rome');
+next calculate:- select 5*sum(c.amt*a.comm) from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum and a.city in ('London','New York');
+
+then use below query:- 
+select 'Yes' as 'Output' from dual where (select sum(a.amt) from orders a, customer b where a.cnum=b.cnum and b.city in ('London','Rome')) > 
+(select 5*sum(c.amt*a.comm) from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum and a.city in ('London','New York'))
+Union
+select 'NO' as 'Output' from dual where (select sum(a.amt) from orders a, customer b where a.cnum=b.cnum and b.city in ('London','Rome')) <= 
+(select 5*sum(c.amt*a.comm) from salespeople a, customer b, orders c where a.snum=b.snum and b.cnum=c.cnum and a.city in ('London','New York'));
 
 
+123.Which is the date, order number, amt and city for each salesperson (by name) for the maximum order he has obtained?
+Ans:- select a.odate,a.onum,a.amt,c.city, c.sname from orders a, customer b, salespeople c where a.cnum=b.cnum and b.snum=c.snum 
+and a.amt = (select max(x.amt) from orders x, customer y where x.cnum=y.cnum and y.snum=c.snum group by y.snum); 
 
+124.Which salesperson(s) should be fired?
+Ans:- select a.snum,a.sname, sum(c.amt) from salespeople a, customer b,orders c where a.snum=b.snum and b.cnum=c.cnum group by a.snum;
+
+125.What is the total income for the company?
+Ans:- select sum(amt) from orders;
 
 
